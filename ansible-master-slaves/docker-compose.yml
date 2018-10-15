@@ -1,0 +1,52 @@
+version: '3'
+volumes:
+  keys_volume:
+services:
+  master:
+  #  image: master-centos:latest
+    build:
+      context: ./master
+      dockerfile: Dockerfile
+    image: master
+    container_name: master
+    volumes:
+      - keys_volume:/root/.keys
+    entrypoint: bash -c "service ssh restart && cp -p /root/.ssh/id_rsa.pub /root/.keys/authorized_keys && chmod 600 /root/.keys/authorized_keys && top"
+    stdin_open: true
+    tty: true
+  slave1:
+    # image: slave:latest
+    build:
+      context: ./slaves
+      dockerfile: slave1
+    image: slave
+    container_name: slave1
+    volumes:
+      - keys_volume:/root/.keys
+    entrypoint: bash -c "service ssh restart && cp -p /root/.keys/authorized_keys /root/.ssh/authorized_keys && top"
+    stdin_open: true
+    tty: true 
+  slave2:
+    image: slave:latest
+    container_name: slave2
+    volumes:
+      - keys_volume:/root/.keys
+    entrypoint: bash -c "service ssh restart && cp -p /root/.keys/authorized_keys /root/.ssh/authorized_keys && top"
+    stdin_open: true
+    tty: true
+  slave3:
+    image: slave:latest
+    container_name: slave3
+    volumes:
+      - keys_volume:/root/.keys
+    entrypoint: bash -c "service ssh restart && cp -p /root/.keys/authorized_keys /root/.ssh/authorized_keys && top"
+    stdin_open: true
+    tty: true
+  slave4:
+    image: slave:latest
+    container_name: slave4
+    volumes:
+      - keys_volume:/root/.keys
+    entrypoint: bash -c "service ssh restart && cp -p /root/.keys/authorized_keys /root/.ssh/authorized_keys && top"
+    stdin_open: true
+    tty: true
